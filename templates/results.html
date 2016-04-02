@@ -1,0 +1,20 @@
+<ion-view>
+ <ion-nav-title>
+		<h4>Property Cross</h4>
+ </ion-nav-title>
+ <ion-nav-buttons side='right'><button class="button faves" ng-click="go_faves()">Faves</button></ion-nav-buttons> 
+ <ion-content>
+ <div class ='row'>
+	<p class = "col"><span>5</span> of <span>20</span></p>
+ </div>
+			<ion-list>
+			  <ion-item ng-repeat="item in properties" item="item"
+			   href="#/property/{{item.guid}}" class="item-thumbnail-left"
+			  >
+					<img src="{{item.thumb_url}}">
+					<h2>{{ item.price }}&pound;</h2>
+					<p>{{ item.title }}</p>
+			  </ion-item>
+			</ion-list>		
+  </ion-content>	
+</ion-view>

@@ -11,11 +11,11 @@
 	<div class="list list-inset home-search">
 	  <label class="item item-input small-input">
 		<i class="icon ion-search placeholder-icon"></i>
-		<input ng-model="search_text" type="text" placeholder="Search">
+		<input data-ng-model="search" type="text" placeholder="Search">
 	  </label>
 	</div>
 	<div class="list list-inset middle-up">
-		  <button ng-click='go_res()' class="button button-light button-small">Go</button>
+		  <button ng-click='go_res(search)' class="button button-light button-small">Go</button>
 		  <button class="button button-light button-small">My Location</button>
 	</div>
 	

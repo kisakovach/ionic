@@ -38,7 +38,7 @@ angular.module('propertycross', ['ionic','propertycross.controllers','propertycr
 	controller:'homeCtrl'
   })
   .state('results',{
-	  url:'/results/:text',
+	  url:'/results',
 	  templateUrl: 'templates/results.html',
 	  controller:'resCtrl'
 	  
