@@ -1,0 +1,46 @@
+/* Empty. Add your own CSS if you like */
+
+.item-input.small-input  {
+	
+	padding:0 0 0 16px;
+}
+
+.list.home-search {
+	
+	margin:10px;
+}
+
+.list.middle-up {
+	
+	margin-top:5px;
+}
+
+.list-inset.small, .card.small {
+	
+	margin:5px 10px;
+}
+
+.list-inset.small p {
+	
+	margin:0;
+}
+
+.button.button-light {
+	
+	border:1px solid rgba(0,0,0,0.2);
+}
+
+.button.faves {
+	
+	border:1px solid black;
+	font-size:14px;
+	font-weight:700;
+	line-height:0.8;
+	padding:0 16px;
+	text-transform:capitalize;
+}
+
+h4 {
+	
+	font-weight:bold;
+}

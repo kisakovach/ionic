@@ -1,0 +1,36 @@
+<ion-view>
+ <ion-nav-title>
+		<h4>Property Cross</h4>
+ </ion-nav-title>
+ <ion-nav-buttons side='right'><button class="button faves" ng-click="go_faves()">Faves</button></ion-nav-buttons> 
+ <ion-content>
+	 <div class ='row'>
+	 <p class = "col">Use the form below to search for houses to buy. You can search by place-name,
+		postcode, or click 'My location', to search in your current location!</p>
+	</div>
+	<div class="list list-inset home-search">
+	  <label class="item item-input small-input">
+		<i class="icon ion-search placeholder-icon"></i>
+		<input type="text" placeholder="Search">
+	  </label>
+	</div>
+	<div class="list list-inset middle-up">
+		  <button class="button button-light button-small">Go</button>
+		  <button class="button button-light button-small">My Location</button>
+	</div>
+	
+	<div class ="list-inset small">
+		<p>Recent searches:</p>
+	</div>
+	<div class="card small">
+			<ion-list>
+			  <ion-item ng-repeat="item in ressearches" item="item"
+			   href="#/item/{{item.id}}"
+			  >
+			Hello, {{item.text}} ({{ item.count }})!
+			  </ion-item>
+			</ion-list>
+	</div>	
+		
+  </ion-content>	
+</ion-view>
