@@ -36,6 +36,12 @@ angular.module('propertycross', ['ionic','propertycross.controllers','propertycr
     url: '/',
     templateUrl: 'templates/home.html',
 	controller:'homeCtrl'
+  })
+  .state('results',{
+	  url:'/results/:text',
+	  templateUrl: 'templates/results.html',
+	  controller:'resCtrl'
+	  
   });
 
   // if none of the above states are matched, use this as the fallback
