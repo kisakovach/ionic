@@ -1,0 +1,21 @@
+<ion-view>
+ <ion-nav-title>
+		<h4>Property Details</h4>
+ </ion-nav-title>
+ <ion-nav-buttons side='right'><button class="button faves" ng-click="add_faves()">+</button></ion-nav-buttons> 
+ <ion-content>
+  <div class="list card">
+	  <div class="item">
+		<h2>&pound; {{property.price}}</h2>
+		<h4>{{property.title}}</h4>
+	  </div>
+	  <div class="item item-body">
+		<img class="full-image" src="{{property.img_url}}">
+		<p>
+			<b> {{property.bedroom_number+" bed"}}</b>, <b>{{property.bathroom_number+" bathrooms"}}</b>	
+		</p>
+		<p>{{property.summary}}</p>		
+	  </div>
+   </div>
+ </ion-content>	
+</ion-view>

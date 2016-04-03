@@ -42,7 +42,20 @@ angular.module('propertycross', ['ionic','propertycross.controllers','propertycr
 	  templateUrl: 'templates/results.html',
 	  controller:'resCtrl'
 	  
-  });
+  })
+  .state('property',{
+	  url:'/property/:guid',
+	  templateUrl: 'templates/property.html',
+	  controller:'propCtrl'
+	  
+  })
+  .state('faves',{
+	  url:'/faves',
+	  templateUrl: 'templates/faves.html',
+	  controller:'favesCtrl'
+	  
+  })
+  ;
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');

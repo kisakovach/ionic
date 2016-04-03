@@ -1,5 +1,50 @@
 angular.module('propertycross.services', ['ngResource'])
 
+.factory('$localstorage', ['$window', function($window) {
+  return {
+    set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || defaultValue;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '{}');
+    }
+  }
+}])
+
+.factory('Faves',function($localstorage){
+	
+	var Faves=[];
+	return {
+		add: function(item){
+			Faves=$localstorage.getObject('faves');
+			if(Faves.length===undefined)Faves=[];
+			Faves.push(item);
+			$localstorage.setObject('faves',Faves);
+		},
+		remove: function(guid){
+			Faves=$localstorage.getObject('faves');
+			Faves=Faves.filter(function(el){
+				if(el.guid==guid){
+					return false;
+				};
+				return true;
+			});
+			$localstorage.setObject('faves',Faves);
+		},
+		list: function(){
+			
+			return $localstorage.getObject('faves');
+		}
+		
+	}
+})
+
 .factory('RecientSearch', function() {
   // Might use a resource here that returns a JSON array
 

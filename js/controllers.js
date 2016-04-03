@@ -39,12 +39,33 @@ angular.module('propertycross.controllers', ['ionic'])
 		SearchLocation.search($rootScope.searchText,p)
 		.then(function(res){
 			$scope.properties=res.listings;
-			$scope.start=p*5;	
+			$rootScope.currentResult=res;
+			$scope.start=p*5;
+				
 		});	
 	} 
 	
 	$scope.properties=$rootScope.currentResult.listings;
 	$scope.total=$rootScope.currentResult.total_results;
-});
+})
+
+.controller('propCtrl',function($scope,$rootScope,$stateParams,Faves){
+	$scope.property={};
+	var temp=$rootScope.currentResult.listings.filter(function(el){
+		if(el.guid==$stateParams.guid){
+			return true
+		};
+	});
+	$scope.property=temp[0];
+	$scope.add_faves = function (){
+		Faves.add($scope.property);
+	}
+})
+
+.controller('favesCtrl',function($scope,$rootScope){
+	
+	
+})
+;
 
 
