@@ -12,6 +12,7 @@ angular.module('propertycross.controllers', ['ionic'])
 		//console.log($scope.search.text);
 		SearchLocation.search(text).then(function(res){
 			$rootScope.currentResult=res;
+			$rootScope.searchText=text;
 			$state.go('results');	
 		},function(error){
 				console.log(error);
@@ -21,9 +22,29 @@ angular.module('propertycross.controllers', ['ionic'])
 	
 })
 
-.controller('resCtrl',function($scope, $rootScope, $stateParams){
+.controller('resCtrl',function($scope, $rootScope, $stateParams, $ionicLoading, SearchLocation){
+	$scope.show = function() {
+		$ionicLoading.show({
+		  template: 'Loading...'
+		});
+	};
+	$scope.hide = function(){
+		$ionicLoading.hide();
+	};
 	
-	$scope.properties=$rootScope.currentResult;
+	var p=1;
+	$scope.start=5*p;
+	$scope.next=function(){
+		p++;
+		SearchLocation.search($rootScope.searchText,p)
+		.then(function(res){
+			$scope.properties=res.listings;
+			$scope.start=p*5;	
+		});	
+	} 
+	
+	$scope.properties=$rootScope.currentResult.listings;
+	$scope.total=$rootScope.currentResult.total_results;
 });
 
 

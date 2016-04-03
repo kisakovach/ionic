@@ -5,7 +5,7 @@
  <ion-nav-buttons side='right'><button class="button faves" ng-click="go_faves()">Faves</button></ion-nav-buttons> 
  <ion-content>
  <div class ='row'>
-	<p class = "col"><span>5</span> of <span>20</span></p>
+	<p class = "col"><span>{{start}}</span> of <span>{{ total }}</span></p>
  </div>
 			<ion-list>
 			  <ion-item ng-repeat="item in properties" item="item"
@@ -15,6 +15,9 @@
 					<h2>{{ item.price }}&pound;</h2>
 					<p>{{ item.title }}</p>
 			  </ion-item>
-			</ion-list>		
+			</ion-list>
+			<button ng-click="next()" class="button button-full button-light">
+			  Load more … Results 
+			</button>	
   </ion-content>	
 </ion-view>

@@ -29,6 +29,7 @@ angular.module('propertycross.services', ['ngResource'])
         action: 'search_listings',
         encoding: 'json',
         listing_type: 'buy',
+		'number_of_results':'5',
 		callback: 'JSON_CALLBACK'	
 		},{'search':{method:"JSONP",headers:{
             'Content-Type': 'application/json',
@@ -42,12 +43,13 @@ angular.module('propertycross.services', ['ngResource'])
     all: function() {
       //return ressearch;
     },
-	search: function(text){
+	search: function(text,p=''){
+	   if(p=='')p=1;
 	   var q=$q.defer();
-	   api.search({'place_name':text}, function(res){ 
+	   api.search({'place_name':text,'page':p}, function(res){ 
 		   if(successCodes.indexOf(res.response.application_response_code)!=-1){
 			   if(res.response.listings.length>0){
-				q.resolve(res.response.listings);
+				q.resolve(res.response);
 			   } else {
 				   q.reject('There were no properties found for the given location.');
 			   }
@@ -60,6 +62,6 @@ angular.module('propertycross.services', ['ngResource'])
 		   q.reject('An error occurred while searching. Please check your network connection and try again.');   
 	   });
 	   return q.promise;
-	}	
+	},	
   };
 });;
