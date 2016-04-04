@@ -1,22 +1,21 @@
 <ion-view>
  <ion-nav-title>
-		<h4>Property Cross</h4>
+		<h4><span>{{start}}</span> of <span>{{ total }} matches</span></h4>
  </ion-nav-title>
  <ion-nav-buttons side='right'><button class="button faves" ng-click="go_faves()">Faves</button></ion-nav-buttons> 
  <ion-content>
- <div class ='row'>
-	<p class = "col"><span>{{start}}</span> of <span>{{ total }}</span></p>
- </div>
+ <!--<div class ='row'>
+	<p class = "col"></p>
+ </div>-->
 			<ion-list>
 			  <ion-item ng-repeat="item in properties" item="item"
-			   href="#/property/{{item.guid}}" class="item-thumbnail-left"
-			  >
+			   href="#/property/{{item.guid}}" class="item-thumbnail-left" >
 					<img src="{{item.thumb_url}}">
-					<h2>&pound; {{ item.price }}</h2>
+					<h2>{{ item.price }}</h2>
 					<p>{{ item.title }}</p>
 			  </ion-item>
 			</ion-list>
-			<button ng-click="next()" class="button button-full button-light">
+			<button ng-click="next()" ng-show="more" class="button button-full button-light">
 			  Load more … Results 
 			</button>	
   </ion-content>	

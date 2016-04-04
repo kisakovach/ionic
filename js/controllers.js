@@ -1,70 +1,56 @@
 angular.module('propertycross.controllers', ['ionic'])
 
-.controller('homeCtrl', function($scope, $rootScope, $state, RecientSearch, SearchLocation) {
-	$rootScope.currentResult = {};
-	$scope.search='';
-	$scope.ressearches=RecientSearch.all();
-	$scope.go_faves=function(){
-		console.log("go faves list view");
-	};
-	
-	$scope.go_res = function(text){
-		//console.log($scope.search.text);
-		SearchLocation.search(text).then(function(res){
-			$rootScope.currentResult=res;
-			$rootScope.searchText=text;
-			$state.go('results');	
-		},function(error){
-				console.log(error);
-		});
-		
+.controller('homeCtrl', function($scope, $rootScope, $state, $ionicLoading, Properties) {
+	var ressearch = [
+  {'place_name':"detroid",'title':'sdsfsaf'},
+  {'place_name':"mariupol",'title':'Mariupol'},
+  {'place_name':"new york",'title':'New York'}
+  ];
+  $scope.ressearches = ressearch;
+  $scope.locations=[];
+  var loading;
+  $scope.errMsg='';
+  $scope.showErr=false;
+  var errorParse=function(err){
+	$scope.showErr=true;
+	if(typeof err==='string'){	
+		$scope.errMsg=err;
+	} else if (err instanceof Array) {
+		$scope.errMsg='Please select a location below:';
+		$scope.locations=err;	
 	}
-	
+  };
+  
+  var go = ionic.debounce(function(text_search){
+				loading=$ionicLoading.show({template:"Searching..."});
+				Properties.search(text_search).then(function(res){
+					$ionicLoading.hide();
+					$state.go('results');	
+				},function(err){
+					errorParse(err);
+					$ionicLoading.hide();
+				});	
+			},200);
+   
+  $scope.go = function(text_search){
+		go(text_search);
+  };
+     
 })
 
-.controller('resCtrl',function($scope, $rootScope, $stateParams, $ionicLoading, SearchLocation){
-	$scope.show = function() {
-		$ionicLoading.show({
-		  template: 'Loading...'
-		});
-	};
-	$scope.hide = function(){
-		$ionicLoading.hide();
-	};
-	
-	var p=1;
-	$scope.start=5*p;
-	$scope.next=function(){
-		p++;
-		SearchLocation.search($rootScope.searchText,p)
-		.then(function(res){
-			$scope.properties=res.listings;
-			$rootScope.currentResult=res;
-			$scope.start=p*5;
-				
-		});	
-	} 
-	
-	$scope.properties=$rootScope.currentResult.listings;
-	$scope.total=$rootScope.currentResult.total_results;
+.controller('resCtrl',function($scope, $state, $ionicLoading, Properties){
+	$scope.start=Properties.count();
+	$scope.total=Properties.getTotal();
+	$scope.properties=Properties.current();
 })
 
 .controller('propCtrl',function($scope,$rootScope,$stateParams,Faves){
-	$scope.property={};
-	var temp=$rootScope.currentResult.listings.filter(function(el){
-		if(el.guid==$stateParams.guid){
-			return true
-		};
-	});
-	$scope.property=temp[0];
-	$scope.add_faves = function (){
-		Faves.add($scope.property);
-	}
+		
 })
 
-.controller('favesCtrl',function($scope,$rootScope){
+.controller('favesCtrl',function($scope,$state,$rootScope,Faves){
 	
-	
+	 	
 })
 ;
 

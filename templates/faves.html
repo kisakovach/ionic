@@ -1,9 +1,13 @@
 <ion-view>
  <ion-nav-title>
-		<h4>Property Cross</h4>
+		<h4>Favorites</h4>
  </ion-nav-title>
  <ion-nav-buttons side='right'><button class="button faves" ng-click="go_faves()">Faves</button></ion-nav-buttons> 
  <ion-content>
+ <div class ='row'ng-if='!total' >
+	You have not added any properties to your favourites!
+ </div>
+ <div ng-if='total'>
  <div class ='row'>
 	<p class = "col"><span>{{start}}</span> of <span>{{ total }}</span></p>
  </div>
@@ -16,8 +20,9 @@
 					<p>{{ item.title }}</p>
 			  </ion-item>
 			</ion-list>
-			<button ng-click="next()" class="button button-full button-light">
+			<button ng-show="more" ng-click="next()" class="button button-full button-light">
 			  Load more … Results 
-			</button>	
+			</button>
+</div>			
   </ion-content>	
 </ion-view>

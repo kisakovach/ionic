@@ -2,7 +2,10 @@
  <ion-nav-title>
 		<h4>Property Details</h4>
  </ion-nav-title>
- <ion-nav-buttons side='right'><button class="button faves" ng-click="add_faves()">+</button></ion-nav-buttons> 
+ <ion-nav-buttons side='right'>
+	<button class="button faves" ng-show="!fave" ng-click="add_faves()">+</button>
+	<button class="button button-positive faves" ng-show="fave" ng-click="remove_faves()">-</button>
+ </ion-nav-buttons> 
  <ion-content>
   <div class="list card">
 	  <div class="item">

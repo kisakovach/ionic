@@ -15,22 +15,31 @@
 	  </label>
 	</div>
 	<div class="list list-inset middle-up">
-		  <button ng-click='go_res(search)' class="button button-light button-small">Go</button>
+		  <button ng-click='go(search)' class="button button-light button-small">Go</button>
 		  <button class="button button-light button-small">My Location</button>
 	</div>
 	
-	<div class ="list-inset small">
+	<div ng-show='showErr' class="err_msg list-inset">
+				<h4>{{ errMsg }}</h4>
+				<div >
+					<ion-list >
+					  <ion-item ng-repeat="item in locations" item="item"
+							   href="#/item/{{item.place_name}}" >
+							 Title: {{item.title}}, place: {{ item.place_name }}
+					  </ion-item>
+					</ion-list>
+				</div>	
+	</div>	
+	<div ng-show='!showErr' class ="list-inset small">
 		<p>Recent searches:</p>
-	</div>
-	<div class="card small">
-			<ion-list>
+		<div class="card small">
+			<ion-list >
 			  <ion-item ng-repeat="item in ressearches" item="item"
-			   href="#/item/{{item.id}}"
-			  >
-			Hello, {{item.text}} ({{ item.count }})!
+					   href="#/item/{{item.place_name}}" >
+					 Title: {{item.title}}, place: {{ item.place_name }}
 			  </ion-item>
 			</ion-list>
+		</div>	
 	</div>	
-		
   </ion-content>	
 </ion-view>
