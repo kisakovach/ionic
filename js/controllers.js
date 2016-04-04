@@ -1,12 +1,14 @@
 angular.module('propertycross.controllers', ['ionic'])
 
-.controller('homeCtrl', function($scope, $rootScope, $state, $ionicLoading, Properties) {
+.controller('homeCtrl', function($scope, $rootScope, $state, $ionicLoading, Properties,RecentSearches) {
 	var ressearch = [
-  {'place_name':"detroid",'title':'sdsfsaf'},
-  {'place_name':"mariupol",'title':'Mariupol'},
-  {'place_name':"new york",'title':'New York'}
-  ];
-  $scope.ressearches = ressearch;
+					  {'place_name':"detroid",'title':'sdsfsaf'},
+					  {'place_name':"mariupol",'title':'Mariupol'},
+					  {'place_name':"new york",'title':'New York'}
+					];
+	RecentSearches.get().then(function(res){
+		$scope.ressearches =res;
+	});
   $scope.locations=[];
   var loading;
   $scope.errMsg='';
@@ -35,22 +37,44 @@ angular.module('propertycross.controllers', ['ionic'])
   $scope.go = function(text_search){
 		go(text_search);
   };
-     
+  
+  $scope.go_faves=function(){
+		$state.go('faves');
+  }  
 })
 
 .controller('resCtrl',function($scope, $state, $ionicLoading, Properties){
 	$scope.start=Properties.count();
 	$scope.total=Properties.getTotal();
 	$scope.properties=Properties.current();
+	$scope.go_faves=function(){
+		$state.go('faves');
+	}
 })
 
-.controller('propCtrl',function($scope,$rootScope,$stateParams,Faves){
-		
-})
-
-.controller('favesCtrl',function($scope,$state,$rootScope,Faves){
+.controller('propCtrl',function($scope,$ionicLoading,$stateParams,Faves,Properties){
+	$scope.property=Faves.get($stateParams.guid);
+	if(!$scope.property){
+		$scope.property=Properties.get($stateParams.guid);
+	} else { $scope.fave='fave'; };
 	
-	 	
+	$scope.add_faves = function(){	
+		if(Faves.check($scope.property)){
+			Faves.remove($scope.property);
+			$scope.fave='';
+		} else {
+				Faves.add($scope.property)
+				$scope.fave='fave';
+		};
+	};
+	
+})
+
+.controller('favesCtrl',function($scope,Faves){
+		
+	 	Faves.load().then(function(properties){
+			$scope.properties=properties;	
+		});		
 })
 ;
 

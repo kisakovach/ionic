@@ -12,51 +12,59 @@ angular.module('propertycross.services', ['ngResource'])
       $window.localStorage[key] = JSON.stringify(value);
     },
     getObject: function(key) {
-      return JSON.parse($window.localStorage[key] || '{}');
+      return JSON.parse($window.localStorage[key]||'[]');
     }
   }
 }])
 
-.factory('Faves',function($localstorage){
+.factory('Faves',function($localstorage,$q){
+	var faves=[];
 	
-	var Faves=[];
+	function save(){
+		try{
+			$localstorage.setObject('faves',faves);
+		} catch(e){
+			console.log('error save to faves')
+		}
+	}
+		
 	return {
-		add: function(item){
-			Faves=$localstorage.getObject('faves');
-			if(Faves.length===undefined)Faves=[];
-			Faves.push(item);
-			$localstorage.setObject('faves',Faves);
+		load: function(){
+			var q=$q.defer();
+			if(!faves||!faves.length)faves=$localstorage.getObject('faves');
+			q.resolve(faves);
+			return q.promise;	
 		},
-		remove: function(guid){
-			Faves=$localstorage.getObject('faves');
-			Faves=Faves.filter(function(el){
-				if(el.guid==guid){
-					return false;
-				};
-				return true;
-			});
-			$localstorage.setObject('faves',Faves);
+		add: function(item){
+			if(faves.indexOf(item)==-1){
+				faves.push(item);
+				save();
+			}	
+		},
+		remove: function(item){
+			var i=faves.indexOf(item);
+			if(i==-1) return i;
+			faves.splice(i,1);
+			save();
+			return faves;
 		},
 		list: function(){
-			return $localstorage.getObject('faves');
+			return Faves;
 		},
-		check: function(guid){
-			var res=false;
-			var temp=$localstorage.getObject('faves');
-			if(temp.length>0){
-				temp.forEach(function(item){
-					if(item.guid==guid){
-						res=true;
-					}
-				});
-				
-			};
-			return res
+		check: function(item){
+			return faves.indexOf(item)!=-1;
+		},
+		get:function(guid){
+			var res=null;
+			faves.forEach(function(el){
+				if(el.guid==guid)res=el;
+			});
+			return res;
 		}	
 	}
 })
 
-.factory('Nest_api',function($q,$resource){
+.factory('Nest_api',function($q,$resource,RecentSearches){
 	
   var api=$resource("http://api.nestoria.co.uk/api",
 	  { country :'uk',
@@ -81,6 +89,7 @@ angular.module('propertycross.services', ['ngResource'])
 		   if(successCodes.indexOf(res.response.application_response_code)!=-1){
 			   if(res.response.listings.length>0){
 				q.resolve(res.response);
+				RecentSearches.add({place:text,total:res.response.total_results});
 			   } else {
 				   q.reject('There were no properties found for the given location.');
 			   }
@@ -124,12 +133,12 @@ angular.module('propertycross.services', ['ngResource'])
 		return listings.map(function(item){
 			
 			return {
-				giud:item.guid,
+				guid:item.guid,
 				price:price(item.price_formatted),
-				img_url:item.url,
+				img_url:item.img_url,
 				thumb_url:item.thumb_url,
 				title:filterTitle(item.title),
-				rooms:item.bedroom_num+ ' bed, '+item.bathroom_num+' bathrooms',
+				rooms:item.bedroom_number+ ' bed, '+item.bathroom_number+' bathrooms',
 				summary:item.summary	
 			}
 		});
@@ -164,8 +173,15 @@ angular.module('propertycross.services', ['ngResource'])
 	};
 	
 	var getByGuid = function(guid){
-		
-		
+		var property=null;
+		q=$q.defer();
+		properties.forEach(function(item){
+			if(item.guid===guid){
+				property=item;	
+			};
+		});
+		if(property)q.resolve(property); else q.reject("error no suchproperty");
+		return q.promise;
 	};
 	
 	
@@ -181,7 +197,13 @@ angular.module('propertycross.services', ['ngResource'])
 			
 		},
 		get:function(guid){
-			
+			var property=null;
+			properties.forEach(function(item){
+				if(item.guid==guid){
+					property=item;
+				}
+			});
+			return property
 		},
 		current: function(){
 			return properties;
@@ -194,5 +216,48 @@ angular.module('propertycross.services', ['ngResource'])
 			return properties.length;
 		}	
 	}
-});
+})
+
+.factory("RecentSearches",function($q,$localstorage){
+	var searches=[];
+	function save(){
+		try{
+			if(searches.length)	
+				$localstorage.setObject("searches",searches);
+		}catch(e){
+			
+			console.log("Error save recent searches!!");
+		}
+	}
+	
+	return {
+		add: function(item){
+			if(!item) return;
+			i=searches.indexOf(item)
+			if(i!=-1){
+				searches.splice(i, 1);
+			};
+			searches.unshift(item);
+			if (searches.length > 5) {
+                searches.length = 5;
+            }
+            save();
+            return searches;
+		},
+		get:function(){
+			var q=$q.defer();
+			searches=$localstorage.getObject('searches');
+			q.resolve(searches);
+			return q.promise;
+		},
+		
+		save: function(){
+			
+			
+		}
+		
+	}
+	
+})
+;
 

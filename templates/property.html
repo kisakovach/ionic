@@ -3,21 +3,21 @@
 		<h4>Property Details</h4>
  </ion-nav-title>
  <ion-nav-buttons side='right'>
-	<button class="button faves" ng-show="!fave" ng-click="add_faves()">+</button>
-	<button class="button button-positive faves" ng-show="fave" ng-click="remove_faves()">-</button>
+	<button class="button faves" ng-click="add_faves()"><i ng-class='fave' class="icon ion-star"></i></button>
+	<!--<button class="button button-positive faves" ng-show="fave" ng-click="remove_faves()">-</button>-->
  </ion-nav-buttons> 
  <ion-content>
   <div class="list card">
 	  <div class="item">
-		<h2>&pound; {{property.price}}</h2>
-		<h4>{{property.title}}</h4>
+		<h2 ng-bind='property.price'></h2>
+		<h4 ng-bind='property.title'></h4>
 	  </div>
 	  <div class="item item-body">
 		<img class="full-image" src="{{property.img_url}}">
 		<p>
-			<b> {{property.bedroom_number+" bed"}}</b>, <b>{{property.bathroom_number+" bathrooms"}}</b>	
+			<b ng-bind="property.rooms"> </b>
 		</p>
-		<p>{{property.summary}}</p>		
+		<p ng-bind="property.summary"></p>		
 	  </div>
    </div>
  </ion-content>	
