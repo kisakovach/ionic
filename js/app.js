@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('propertycross', ['ionic','propertycross.controllers','propertycross.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$ionicHistory) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,6 +20,10 @@ angular.module('propertycross', ['ionic','propertycross.controllers','propertycr
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+	$ionicPlatform.onHardwareBackButton(function(){
+		$ionicHistory.backView();
+	})
+	
   });
 })
 
@@ -59,4 +63,18 @@ angular.module('propertycross', ['ionic','propertycross.controllers','propertycr
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');
 
+})
+.directive('ngEnter', function() {
+        return function(scope, element, attrs) {
+            element.bind("keydown keypress", function(event) {
+                if(event.which === 13) {
+                        scope.$apply(function(){
+                                scope.$eval(attrs.ngEnter);
+                        });
+                        
+                        event.preventDefault();
+                }
+            });
+        };
 });
+;

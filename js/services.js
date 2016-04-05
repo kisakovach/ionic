@@ -17,6 +17,26 @@ angular.module('propertycross.services', ['ngResource'])
   }
 }])
 
+.factory('Geolocation',function($q){
+	var get = function(){
+				var q=$q.defer();
+				navigator.geolocation.getCurrentPosition(function(pos){
+					q.resolve(pos);
+					console.log(pos);
+				},function(err){
+					q.reject(err);
+					console.log(err);
+				});
+				return q.promise;
+			 };
+	return {
+		
+		get:function(){
+			return get();
+		}
+	}
+})
+
 .factory('Faves',function($localstorage,$q){
 	var faves=[];
 	
@@ -105,10 +125,30 @@ angular.module('propertycross.services', ['ngResource'])
 	   });
 	   return q.promise;
 	},
-	searchByCords: function(){
-		
-	}	
-  };
+	searchByCords: function(point,p=''){
+		if(p=='')p=1;
+		var q=$q.defer();
+		api.search({'centre_point':point,'page':1}, function(res){ 
+		   if(successCodes.indexOf(res.response.application_response_code)!=-1){
+			   if(res.response.listings.length>0){
+				q.resolve(res.response);
+				RecentSearches.add({place:text,total:res.response.total_results});
+			   } else {
+				   q.reject('There were no properties found for the given location.');
+			   }
+		   } else if(ambigCodes.indexOf(res.response.application_response_code)!=-1){
+			   q.reject(res.response.locations.map(function(item){
+				   return {place_name:item.place_name, title:item.title};
+			   }));
+		   } else {
+			   q.reject(res.response);
+		   }
+	   }, function(error){
+		   q.reject('An error occurred while searching. Please check your network connection and try again.');   
+	   });
+	   return q.promise;
+	}		
+}
 })
 
 .factory('Properties', function($q, Nest_api){
@@ -168,8 +208,27 @@ angular.module('propertycross.services', ['ngResource'])
 	};
 	
 	
-	var searchLocation = function(text){
-		
+	var searchLocation = function(point,p){
+		var q=$q.defer();
+		Nest_api.searchByCords(point,p).then(function(res){
+		    var resProperties=getProperties(res.listings);
+			if(!resProperties.length){
+				q.rject("There were no properties found for "+text);
+				return;
+			}
+			if(text!==last){
+				properties=resProperties;
+			}
+			else {
+				properties=properties.concat(resProperties);
+			};
+			last=text;
+			lastRes=res	
+			q.resolve(properties);
+		},function(error){
+			q.reject(error);	
+		});
+		return q.promise
 		
 	};
 	
@@ -194,8 +253,9 @@ angular.module('propertycross.services', ['ngResource'])
 			return search(text,1);
 			
 		},
-		searchLocation:function(){
-			
+		searchLocation:function(point){
+			properties=[];
+			return searchLocation(point,1);
 		},
 		get:function(guid){
 			var property=null;

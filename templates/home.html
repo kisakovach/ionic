@@ -11,12 +11,12 @@
 	<div class="list list-inset home-search">
 	  <label class="item item-input small-input">
 		<i class="icon ion-search placeholder-icon"></i>
-		<input data-ng-model="search" type="text" placeholder="Search">
+		<input ng-enter='go(search)' data-ng-model="search" type="text" placeholder="Search">
 	  </label>
 	</div>
 	<div class="list list-inset middle-up">
 		  <button ng-click='go(search)' class="button button-light button-small">Go</button>
-		  <button class="button button-light button-small">My Location</button>
+		  <button ng-click='myLocation()' class="button button-light button-small">My Location</button>
 	</div>
 	
 	<div ng-show='showErr' class="err_msg list-inset">
@@ -24,7 +24,7 @@
 				<div >
 					<ion-list >
 					  <ion-item ng-repeat="item in locations" item="item"
-							   href="#/item/{{item.place_name}}" >
+							   href="#/item/{{item.place_name}}" ng-click='go(item.place_name)'>
 							 Title: {{item.title}}, place: {{ item.place_name }}
 					  </ion-item>
 					</ion-list>

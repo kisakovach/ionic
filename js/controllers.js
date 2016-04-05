@@ -1,6 +1,6 @@
 angular.module('propertycross.controllers', ['ionic'])
 
-.controller('homeCtrl', function($scope, $rootScope, $state, $ionicLoading, Properties,RecentSearches) {
+.controller('homeCtrl', function($scope, $rootScope, $state, $ionicLoading, Properties,RecentSearches,Geolocation) {
 	var ressearch = [
 					  {'place_name':"detroid",'title':'sdsfsaf'},
 					  {'place_name':"mariupol",'title':'Mariupol'},
@@ -22,6 +22,8 @@ angular.module('propertycross.controllers', ['ionic'])
 	} else if (err instanceof Array) {
 		$scope.errMsg='Please select a location below:';
 		$scope.locations=err;	
+	} else {
+		$scope.errMsg='The location given was not recognised';
 	}
   };
   
@@ -39,6 +41,19 @@ angular.module('propertycross.controllers', ['ionic'])
   $scope.go = function(text_search){
 		go(text_search);
   };
+  
+  $scope.myLocation=ionic.debounce(function(){
+	$ionicLoading.show({template:"Searching..."});  
+		Geolocation.get().then(function(res){
+			point=""+res.coords.latitude+res.coords.longitude;
+			Properties.searchLocation(point).then(function(res){
+				$ionicLoading.hide();	
+			},function(err){
+				errorParse(err);
+				$ionicLoading.hide();
+			});	
+			});
+	},200);    
   
   $scope.go_faves=function(){
 		$state.go('faves');
@@ -91,7 +106,14 @@ angular.module('propertycross.controllers', ['ionic'])
 .controller('favesCtrl',function($scope,Faves){
 		
 	 	Faves.load().then(function(properties){
+			if(!properties.length>0){
+				$scope.errShow=true;
+				$scope.err='You have not added any properties to your favourites';
+			}
 			$scope.properties=properties;	
+		},function(err){
+			$scope.errShow=true;
+			$scope.err='You have not added any properties to your favourites';
 		});		
 })
 ;
