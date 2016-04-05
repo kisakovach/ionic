@@ -34,8 +34,8 @@
 		<p>Recent searches:</p>
 		<div class="card small">
 			<ion-list >
-			  <ion-item ng-repeat="item in ressearches" item="item"
-					   href="#/item/{{item.place_name}}" >
+			  <ion-item ng-repeat="item in ressearches track by $index" item="item"
+				ng-click="go_recent(item.place)" >
 					 <b>Title: {{item.place}} ({{ item.total }})</b>
 			  </ion-item>
 			</ion-list>

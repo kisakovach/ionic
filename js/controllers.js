@@ -6,9 +6,11 @@ angular.module('propertycross.controllers', ['ionic'])
 					  {'place_name':"mariupol",'title':'Mariupol'},
 					  {'place_name':"new york",'title':'New York'}
 					];
+	$scope.ressearches=[];				
 	RecentSearches.get().then(function(res){
 		$scope.ressearches =res;
 	});
+  $scope.search="";	
   $scope.locations=[];
   var loading;
   $scope.errMsg='';
@@ -40,13 +42,29 @@ angular.module('propertycross.controllers', ['ionic'])
   
   $scope.go_faves=function(){
 		$state.go('faves');
-  }  
+  }
+  
+  $scope.go_recent= function(place){
+	  
+	  go(place);
+  } 
 })
 
 .controller('resCtrl',function($scope, $state, $ionicLoading, Properties){
 	$scope.start=Properties.count();
 	$scope.total=Properties.getTotal();
 	$scope.properties=Properties.current();
+	if($scope.total>$scope.properties.length){
+		$scope.more=true;
+	}
+	$scope.next=ionic.debounce(function(){
+		$ionicLoading.show({template:"loading..."})
+		Properties.more().then(function(res){
+			$ionicLoading.hide();
+			$scope.start=res.length;
+			$scope.properties=res;
+		})
+	},200);
 	$scope.go_faves=function(){
 		$state.go('faves');
 	}

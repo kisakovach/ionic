@@ -167,6 +167,7 @@ angular.module('propertycross.services', ['ngResource'])
 		return q.promise
 	};
 	
+	
 	var searchLocation = function(text){
 		
 		
@@ -214,6 +215,18 @@ angular.module('propertycross.services', ['ngResource'])
 		},
 		count:function(){
 			return properties.length;
+		},
+		more: function(){
+			var q=$q.defer();
+			search(last,page+1).then(function(res){
+				properties.concat(res);
+				page++;
+				q.resolve(properties);
+			},function(err){
+				q.reject(err);
+			});
+			return q.promise;
+			
 		}	
 	}
 })
@@ -233,7 +246,10 @@ angular.module('propertycross.services', ['ngResource'])
 	return {
 		add: function(item){
 			if(!item) return;
-			i=searches.indexOf(item)
+			i=-1;
+			searches.forEach(function(el,key){
+				if(item.place==el.place)i=key;
+			});
 			if(i!=-1){
 				searches.splice(i, 1);
 			};

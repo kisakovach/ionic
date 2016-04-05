@@ -10,6 +10,11 @@
 	margin:10px;
 }
 
+.list {
+	
+	min-height:2em;
+}
+
 .list.middle-up {
 	
 	margin-top:5px;
