@@ -102,8 +102,7 @@ angular.module('propertycross.services', ['ngResource'])
   var ambigCodes=['200','202'];
   
   return {
-	search: function(text,p=''){
-	   if(p=='')p=1;
+	search: function(text,p){
 	   var q=$q.defer();
 	   api.search({'place_name':text,'page':p}, function(res){ 
 		   if(successCodes.indexOf(res.response.application_response_code)!=-1){
@@ -125,7 +124,7 @@ angular.module('propertycross.services', ['ngResource'])
 	   });
 	   return q.promise;
 	},
-	searchByCords: function(point,p=''){
+	searchByCords: function(point,p){
 		if(p=='')p=1;
 		var q=$q.defer();
 		api.search({'centre_point':point,'page':1}, function(res){ 
@@ -247,7 +246,7 @@ angular.module('propertycross.services', ['ngResource'])
 	
 	return {
 		
-		search:function(text){
+		search:function(text,p){
 			console.log(text);
 			properties=[];
 			return search(text,1);
@@ -325,11 +324,6 @@ angular.module('propertycross.services', ['ngResource'])
 			searches=$localstorage.getObject('searches');
 			q.resolve(searches);
 			return q.promise;
-		},
-		
-		save: function(){
-			
-			
 		}
 		
 	}
